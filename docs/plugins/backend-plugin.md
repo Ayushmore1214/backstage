@@ -52,7 +52,7 @@ curl localhost:7007/api/carmen/todos
 ```
 
 You should see the following response:
-```sh
+```json
 {
 "items": []
 } 
