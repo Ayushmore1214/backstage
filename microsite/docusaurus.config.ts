@@ -300,6 +300,15 @@ const config: Config = {
         },
       },
     ],
+    // <--- ADD THE LLM.PLUGIN HERE AS AN ARRAY ENTRY INSIDE PLUGINS:
+    [
+      'docusaurus-plugin-llms',
+      {
+        name: 'Backstage Docs',
+        description: 'Official Backstage open-source documentation for adopters and contributors.',
+        contact: 'https://github.com/backstage/backstage',
+      },
+    ],
   ],
   themes: ['docusaurus-theme-openapi-docs'],
   themeConfig: {
