@@ -245,6 +245,7 @@ auth:
         metadataUrl: https://example.com/.well-known/openid-configuration
         clientId: ${AUTH_MY_CLIENT_ID}
         clientSecret: ${AUTH_MY_CLIENT_SECRET}
+        organization: ${AUTH_MY_ORGANIZATION} # Optional: constrains sign-in to specific organization
 ```
 
 Anything enclosed in `${}` can be replaced directly in the yaml, or provided as
@@ -263,6 +264,7 @@ check the App Registration you created:
   basically the same thing.
 - `prompt`: Recommended to use `auto` so the browser will request login to the IDP if the
   user has no active session.
+- `organization` (optional): When provided, this parameter is appended to the authentication URL to constrain the sign-in dialog to show only sign-in providers appropriate for the specified organization. This helps streamline the sign-in process for end users and guides them toward using their organization's preferred SSO provider.
 - `sessionDuration` (optional): Lifespan of the user session.
 
 Note that for the time being, any change in this yaml file requires a restart of the app,

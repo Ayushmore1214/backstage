@@ -82,6 +82,7 @@ export const oidcAuthenticator = createOAuthAuthenticator({
       'tokenSignedResponseAlg',
     );
     const initializedPrompt = config.getOptionalString('prompt');
+    const organization = config.getOptionalString('organization');
 
     if (config.has('scope')) {
       throw new Error(
@@ -143,11 +144,11 @@ export const oidcAuthenticator = createOAuthAuthenticator({
       return { helper, client, strategy };
     });
 
-    return { initializedPrompt, promise };
+    return { initializedPrompt, organization, promise };
   },
 
   async start(input, ctx) {
-    const { initializedPrompt, promise } = ctx;
+    const { initializedPrompt, organization, promise } = ctx;
     const { helper } = await promise;
     const options: Record<string, string> = {
       scope: input.scope,
@@ -157,6 +158,9 @@ export const oidcAuthenticator = createOAuthAuthenticator({
     const prompt = initializedPrompt || 'none';
     if (prompt !== 'auto') {
       options.prompt = prompt;
+    }
+    if (organization) {
+      options.organization = organization;
     }
 
     return helper.start(input, {

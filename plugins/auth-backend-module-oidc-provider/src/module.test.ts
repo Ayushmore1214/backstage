@@ -232,4 +232,43 @@ describe('authModuleOidcProvider', () => {
       encodeURIComponent(`"accessToken":"accessToken"`),
     );
   });
+
+  it('includes organization parameter when configured', async () => {
+    const backend = await startTestBackend({
+      features: [
+        authModuleOidcProvider,
+        import('@backstage/plugin-auth-backend'),
+        mockServices.rootConfig.factory({
+          data: {
+            app: { baseUrl: 'http://localhost' },
+            auth: {
+              session: { secret: 'test' },
+              providers: {
+                oidc: {
+                  development: {
+                    metadataUrl:
+                      'https://oidc.test/.well-known/openid-configuration',
+                    clientId: 'clientId',
+                    clientSecret: 'clientSecret',
+                    organization: 'test-org',
+                  },
+                },
+              },
+            },
+          },
+        }),
+      ],
+    });
+
+    const agent = request.agent(backend.server);
+    const startResponse = await agent.get(
+      `/api/auth/oidc/start?env=development`,
+    );
+    
+    expect(startResponse.status).toEqual(302);
+    const startUrl = new URL(startResponse.get('location'));
+    expect(startUrl.searchParams.get('organization')).toBe('test-org');
+    
+    backend.server.close();
+  });
 });

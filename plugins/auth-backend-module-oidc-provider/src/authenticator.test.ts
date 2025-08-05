@@ -352,6 +352,36 @@ describe('oidcAuthenticator', () => {
         ),
       ).rejects.toThrow('authentication requires session support');
     });
+
+    it('includes organization parameter when configured', async () => {
+      const implementationWithOrg = oidcAuthenticator.initialize({
+        callbackUrl: 'https://backstage.test/callback',
+        config: new ConfigReader({
+          metadataUrl: 'https://oidc.test/.well-known/openid-configuration',
+          clientId: 'clientId',
+          clientSecret: 'clientSecret',
+          organization: 'test-org',
+        }),
+      });
+
+      const startResponse = await oidcAuthenticator.start(
+        startRequest,
+        implementationWithOrg,
+      );
+      const { searchParams } = new URL(startResponse.url);
+
+      expect(searchParams.get('organization')).toBe('test-org');
+    });
+
+    it('does not include organization parameter when not configured', async () => {
+      const startResponse = await oidcAuthenticator.start(
+        startRequest,
+        implementation,
+      );
+      const { searchParams } = new URL(startResponse.url);
+
+      expect(searchParams.get('organization')).toBeNull();
+    });
   });
 
   describe('#authenticate', () => {
