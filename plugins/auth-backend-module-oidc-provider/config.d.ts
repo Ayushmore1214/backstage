@@ -33,6 +33,7 @@ export interface Config {
           additionalScopes?: string | string[];
           prompt?: string;
           timeout?: HumanDuration | string;
+          organization?: string;
           signIn?: {
             resolvers: Array<
               | {
