@@ -37,7 +37,7 @@ export const glossaryPlugin = createPlugin({
     }),
     createPageExtension({
       defaultPath: '/glossary',
-      loader: () => import('../components/GlossaryPage').then(m => <m.GlossaryPage />),
+      loader: () => import('../components/GlossaryPage').then(m => ({ default: m.GlossaryPage })),
     }),
   ],
 });

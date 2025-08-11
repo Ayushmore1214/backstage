@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glossary Plugin Mockup</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: #1976d2;
+            color: white;
+            padding: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .header p {
+            margin: 8px 0 0 0;
+            opacity: 0.9;
+        }
+        .toolbar {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .add-button {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .search-box {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 300px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            background: #f5f5f5;
+            padding: 16px;
+            text-align: left;
+            border-bottom: 2px solid #e0e0e0;
+            font-weight: 600;
+        }
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+        .term {
+            font-weight: 600;
+            color: #1976d2;
+        }
+        .definition {
+            color: #666;
+            line-height: 1.4;
+        }
+        .entity-chip {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 8px;
+            border-radius: 16px;
+            font-size: 12px;
+            border: 1px solid #bbdefb;
+        }
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+        .icon-btn {
+            background: none;
+            border: none;
+            padding: 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+        }
+        .icon-btn:hover {
+            background: #f0f0f0;
+        }
+        .demo-note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 12px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-note">
+        <strong>Demo:</strong> This is a visual mockup of the Glossary Plugin interface. 
+        The actual implementation uses React components and integrates with Backstage's design system.
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Global Glossary</h1>
+            <p>All terminology across the organization</p>
+        </div>
+        
+        <div class="toolbar">
+            <input type="text" class="search-box" placeholder="Search terms and definitions...">
+            <button class="add-button">➕ Add Term</button>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Term</th>
+                    <th>Definition</th>
+                    <th>Entity</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="term">Service Catalog</td>
+                    <td class="definition">
+                        A service catalog is an organized and curated collection of any and all 
+                        business and information technology-related services that can be performed 
+                        by, for, or within an enterprise.
+                    </td>
+                    <td><span class="entity-chip">component:default/service-catalog</span></td>
+                    <td class="actions">
+                        <button class="icon-btn" title="Edit">✏️</button>
+                        <button class="icon-btn" title="Delete">🗑️</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="term">API Gateway</td>
+                    <td class="definition">
+                        An API gateway is a management tool that sits between a client and a 
+                        collection of backend services, acting as a reverse proxy to accept 
+                        all application programming interface (API) calls.
+                    </td>
+                    <td><span class="entity-chip">component:default/api-gateway</span></td>
+                    <td class="actions">
+                        <button class="icon-btn" title="Edit">✏️</button>
+                        <button class="icon-btn" title="Delete">🗑️</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="term">Microservice</td>
+                    <td class="definition">
+                        A software development technique that structures an application as a 
+                        collection of loosely coupled services, which implement business capabilities.
+                    </td>
+                    <td><span class="entity-chip">domain:default/platform</span></td>
+                    <td class="actions">
+                        <button class="icon-btn" title="Edit">✏️</button>
+                        <button class="icon-btn" title="Delete">🗑️</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="term">CI/CD Pipeline</td>
+                    <td class="definition">
+                        Continuous integration and continuous deployment pipeline automates 
+                        the process of software delivery and infrastructure changes.
+                    </td>
+                    <td><span class="entity-chip">system:default/build-system</span></td>
+                    <td class="actions">
+                        <button class="icon-btn" title="Edit">✏️</button>
+                        <button class="icon-btn" title="Delete">🗑️</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="demo-note" style="margin-top: 20px;">
+        <strong>Features:</strong>
+        <ul>
+            <li>Create, read, update, and delete glossary terms</li>
+            <li>Link terms to specific Backstage entities (components, systems, domains)</li>
+            <li>Search functionality across terms and definitions</li>
+            <li>Entity-specific glossary cards on catalog pages</li>
+            <li>Global glossary page for organization-wide terminology</li>
+        </ul>
+    </div>
+</body>
+</html>
