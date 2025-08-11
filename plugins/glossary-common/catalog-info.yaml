@@ -1,0 +1,14 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: plugin-glossary-common
+  title: '@backstage/plugin-glossary-common'
+  description: Common functionalities for the glossary plugin
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/backstage/tree/master/plugins/glossary-common
+    backstage.io/view-url: https://github.com/backstage/backstage/tree/master/plugins/glossary-common
+    backstage.io/edit-url: https://github.com/backstage/backstage/edit/master/plugins/glossary-common/catalog-info.yaml
+spec:
+  type: library
+  owner: '@backstage/maintainers'
+  lifecycle: experimental

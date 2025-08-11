@@ -1,0 +1,14 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: plugin-glossary-backend
+  title: '@backstage/plugin-glossary-backend'
+  description: A Backstage backend plugin that provides glossary functionality
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/backstage/tree/master/plugins/glossary-backend
+    backstage.io/view-url: https://github.com/backstage/backstage/tree/master/plugins/glossary-backend
+    backstage.io/edit-url: https://github.com/backstage/backstage/edit/master/plugins/glossary-backend/catalog-info.yaml
+spec:
+  type: library
+  owner: '@backstage/maintainers'
+  lifecycle: experimental
