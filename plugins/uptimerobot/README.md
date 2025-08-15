@@ -191,6 +191,50 @@ backend:
     level: debug
 ```
 
+## Testing the Plugin
+
+### Quick Test
+
+Once installed and configured, you can test the plugin:
+
+1. **Backend Health Check**: Visit `http://localhost:7007/api/uptimerobot/health` to verify the backend is running
+2. **Monitors API**: Visit `http://localhost:7007/api/uptimerobot/monitors` to test the UptimeRobot API integration
+3. **Frontend**: Navigate to `/uptimerobot` in your Backstage app to view the monitor dashboard
+
+### Manual Testing
+
+To manually test the UptimeRobot API integration, you can use curl:
+
+```bash
+# Test the health endpoint
+curl http://localhost:7007/api/uptimerobot/health
+
+# Test the monitors endpoint (requires valid API key in config)
+curl http://localhost:7007/api/uptimerobot/monitors
+```
+
+Expected responses:
+
+```json
+// Health endpoint
+{"status":"ok"}
+
+// Monitors endpoint (example)
+{
+  "stat": "ok",
+  "monitors": [
+    {
+      "id": 123456,
+      "friendly_name": "My Website",
+      "url": "https://example.com",
+      "type": 1,
+      "status": 2,
+      "interval": 300
+    }
+  ]
+}
+```
+
 ## Development
 
 ### Local Development
