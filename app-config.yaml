@@ -299,3 +299,7 @@ auth:
 
 permission:
   enabled: true
+
+# UptimeRobot configuration
+uptimerobot:
+  apiKey: ur3071305-0156e8246950675203bb9010
