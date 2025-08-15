@@ -17,7 +17,6 @@
 import express from 'express';
 import Router from 'express-promise-router';
 import { LoggerService, RootConfigService } from '@backstage/backend-plugin-api';
-import fetch from 'node-fetch';
 
 /**
  * Dependencies of the UptimeRobot router

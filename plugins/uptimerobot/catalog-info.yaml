@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: internal-plugin-uptimerobot
+  title: '@internal/plugin-uptimerobot'
+spec:
+  lifecycle: experimental
+  type: backstage-frontend-plugin
+  owner: maintainers
