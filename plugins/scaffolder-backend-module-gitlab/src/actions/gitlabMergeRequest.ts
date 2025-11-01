@@ -73,7 +73,7 @@ async function getFileAction(
         }
       } catch (error) {
         logger.warn(
-          `Unable to retrieve detailed information for remote file ${filePath}`,
+          `Unable to retrieve detail information for remote file ${filePath}`,
         );
       }
       return 'update';
