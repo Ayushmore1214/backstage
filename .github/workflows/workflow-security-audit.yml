@@ -84,13 +84,30 @@ jobs:
                 const checkSteps = (steps) => {
                   if (!steps) return;
                   for (const step of steps) {
-                    if (step.uses && !step.uses.includes('@') && !step.uses.startsWith('./')) {
-                      issues.push({
-                        file,
-                        severity: 'warning',
-                        issue: `Action not pinned: ${step.uses}`,
-                        recommendation: 'Pin actions to specific SHA for security'
-                      });
+                    if (step.uses) {
+                      // Skip local actions (starting with ./)
+                      if (step.uses.startsWith('./')) continue;
+                      
+                      // Check if action has a version reference (@)
+                      if (!step.uses.includes('@')) {
+                        issues.push({
+                          file,
+                          severity: 'warning',
+                          issue: `Action not pinned: ${step.uses}`,
+                          recommendation: 'Pin actions to specific SHA for security'
+                        });
+                      } else {
+                        // Check if pinned to SHA (40 hex characters)
+                        const match = step.uses.match(/@([a-f0-9]+)$/);
+                        if (match && match[1].length !== 40) {
+                          issues.push({
+                            file,
+                            severity: 'info',
+                            issue: `Action pinned to tag/branch instead of SHA: ${step.uses}`,
+                            recommendation: 'Consider pinning to specific SHA for better security'
+                          });
+                        }
+                      }
                     }
                   }
                 };
