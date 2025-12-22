@@ -4,6 +4,9 @@ on:
     branches:
       - master
 
+permissions:
+  contents: write
+
 jobs:
   autofix-markdown:
     name: Autofix Markdown files using Prettier

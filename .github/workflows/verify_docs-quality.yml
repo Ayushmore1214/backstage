@@ -6,6 +6,10 @@ on:
       - '.github/workflows/verify_docs-quality.yml'
       - '**.md'
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   check-all-files:
     runs-on: ubuntu-latest
