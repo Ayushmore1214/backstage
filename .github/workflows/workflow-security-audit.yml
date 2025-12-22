@@ -1,0 +1,180 @@
+name: Workflow Security Audit
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/**'
+  schedule:
+    # Run weekly on Monday at 08:00 UTC
+    - cron: '0 8 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+  pull-requests: write
+
+jobs:
+  audit-workflows:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout Repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Run Actionlint
+        id: actionlint
+        uses: reviewdog/action-actionlint@0d5b6212d18c5f0a4c9c31a7fbf6f90e13ede5d9 # v1.61.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          filter_mode: nofilter
+          fail_on_error: false
+
+      - name: Security Audit - Check for Common Issues
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const yaml = require('js-yaml');
+            
+            const workflowsDir = '.github/workflows';
+            const files = fs.readdirSync(workflowsDir).filter(f => f.endsWith('.yml') || f.endsWith('.yaml'));
+            
+            const issues = [];
+            
+            for (const file of files) {
+              const filePath = path.join(workflowsDir, file);
+              const content = fs.readFileSync(filePath, 'utf8');
+              
+              try {
+                const workflow = yaml.load(content);
+                
+                // Check 1: Workflows should have explicit permissions
+                if (!workflow.permissions) {
+                  issues.push({
+                    file,
+                    severity: 'warning',
+                    issue: 'Missing explicit permissions declaration',
+                    recommendation: 'Add explicit permissions to follow principle of least privilege'
+                  });
+                }
+                
+                // Check 2: pull_request_target should be used carefully
+                if (workflow.on && (workflow.on.pull_request_target || workflow.on.includes?.('pull_request_target'))) {
+                  issues.push({
+                    file,
+                    severity: 'high',
+                    issue: 'Uses pull_request_target trigger',
+                    recommendation: 'Ensure this workflow does not execute untrusted code from PR. Consider using pull_request instead.'
+                  });
+                }
+                
+                // Check 3: Actions should be pinned to SHA
+                const checkSteps = (steps) => {
+                  if (!steps) return;
+                  for (const step of steps) {
+                    if (step.uses && !step.uses.includes('@') && !step.uses.startsWith('./')) {
+                      issues.push({
+                        file,
+                        severity: 'warning',
+                        issue: `Action not pinned: ${step.uses}`,
+                        recommendation: 'Pin actions to specific SHA for security'
+                      });
+                    }
+                  }
+                };
+                
+                if (workflow.jobs) {
+                  for (const [jobName, job] of Object.entries(workflow.jobs)) {
+                    checkSteps(job.steps);
+                  }
+                }
+                
+                // Check 4: Secrets should not be exposed in logs
+                if (content.includes('echo ${{') && content.includes('secrets.')) {
+                  issues.push({
+                    file,
+                    severity: 'critical',
+                    issue: 'Potential secret exposure in echo command',
+                    recommendation: 'Never echo secrets directly. Use secret masking or environment variables.'
+                  });
+                }
+                
+                // Check 5: Script injections in run commands
+                if (content.includes('github.event.') && content.includes('run:')) {
+                  const lines = content.split('\n');
+                  for (let i = 0; i < lines.length; i++) {
+                    if (lines[i].includes('run:') && 
+                        (lines.slice(Math.max(0, i-5), i+10).join('\n').includes('github.event.issue.title') ||
+                         lines.slice(Math.max(0, i-5), i+10).join('\n').includes('github.event.pull_request.title') ||
+                         lines.slice(Math.max(0, i-5), i+10).join('\n').includes('github.event.comment.body'))) {
+                      issues.push({
+                        file,
+                        severity: 'high',
+                        issue: 'Potential script injection vulnerability',
+                        recommendation: 'User-controlled input in run commands can lead to code injection. Use environment variables or actions/github-script instead.'
+                      });
+                      break;
+                    }
+                  }
+                }
+                
+              } catch (error) {
+                console.log(`Error parsing ${file}: ${error.message}`);
+              }
+            }
+            
+            // Generate report
+            let report = '# Workflow Security Audit Report\n\n';
+            
+            if (issues.length === 0) {
+              report += '✅ No security issues detected!\n';
+            } else {
+              const critical = issues.filter(i => i.severity === 'critical');
+              const high = issues.filter(i => i.severity === 'high');
+              const warning = issues.filter(i => i.severity === 'warning');
+              
+              report += `## Summary\n\n`;
+              report += `- 🔴 Critical: ${critical.length}\n`;
+              report += `- 🟠 High: ${high.length}\n`;
+              report += `- 🟡 Warning: ${warning.length}\n\n`;
+              
+              const addIssues = (severity, emoji) => {
+                const filtered = issues.filter(i => i.severity === severity);
+                if (filtered.length > 0) {
+                  report += `## ${emoji} ${severity.toUpperCase()} Issues\n\n`;
+                  for (const issue of filtered) {
+                    report += `### ${issue.file}\n`;
+                    report += `- **Issue**: ${issue.issue}\n`;
+                    report += `- **Recommendation**: ${issue.recommendation}\n\n`;
+                  }
+                }
+              };
+              
+              addIssues('critical', '🔴');
+              addIssues('high', '🟠');
+              addIssues('warning', '🟡');
+            }
+            
+            console.log(report);
+            
+            await core.summary
+              .addRaw(report)
+              .write();
+            
+            // Fail on critical issues
+            const criticalIssues = issues.filter(i => i.severity === 'critical');
+            if (criticalIssues.length > 0) {
+              core.setFailed(`Found ${criticalIssues.length} critical security issue(s) in workflows`);
+            }
