@@ -1,3 +1,14 @@
+# Main Continuous Integration Workflow
+# 
+# This workflow runs comprehensive quality checks on all pull requests:
+# - Dependency installation and caching
+# - Code quality verification (linting, type checking, API reports)
+# - Building all packages
+# - Running tests with database services
+#
+# Security: Uses explicit least-privilege permissions and Harden Runner
+# Performance: Uses matrix strategy for Node.js versions and caching
+# Concurrency: Cancels outdated runs when new commits are pushed
 name: CI
 on:
   # NOTE: If you change these you must update ci-noop.yml as well
@@ -6,9 +17,11 @@ on:
       - 'microsite/**'
       - 'beps/**'
 
+# Explicit permissions following principle of least privilege
 permissions:
   contents: read
 
+# Cancel in-progress runs when new commits are pushed to save resources
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -31,6 +44,7 @@ jobs:
 
     name: Install ${{ matrix.node-version }}
     steps:
+      # Security: Harden runner monitors network egress for anomalies
       - name: Harden Runner
         uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.0
         with:

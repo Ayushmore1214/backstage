@@ -1,0 +1,179 @@
+name: Dependency Update Check
+
+on:
+  schedule:
+    # Run monthly on the 1st at 10:00 UTC
+    - cron: '0 10 1 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check-dependencies:
+    runs-on: ubuntu-latest
+    if: github.repository == 'backstage/backstage' # prevent running on forks
+    
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout Repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 20.x
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Check for outdated dependencies
+        id: outdated
+        run: |
+          # Run yarn outdated and capture output
+          yarn outdated --json > outdated.json || true
+          
+          # Check if there are any outdated packages
+          if [ -s outdated.json ]; then
+            echo "has_outdated=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_outdated=false" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
+
+      - name: Parse and summarize outdated dependencies
+        if: steps.outdated.outputs.has_outdated == 'true'
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const fs = require('fs');
+            
+            let summary = '# Outdated Dependencies Report\n\n';
+            summary += `**Generated:** ${new Date().toISOString()}\n\n`;
+            
+            try {
+              const outdatedContent = fs.readFileSync('outdated.json', 'utf8');
+              const lines = outdatedContent.trim().split('\n').filter(line => line);
+              
+              const packages = [];
+              
+              for (const line of lines) {
+                try {
+                  const data = JSON.parse(line);
+                  if (data.type === 'info' && data.data) {
+                    packages.push({
+                      name: data.data,
+                      // Yarn outdated format varies, handle gracefully
+                    });
+                  }
+                } catch (e) {
+                  // Skip invalid JSON lines
+                }
+              }
+              
+              if (packages.length > 0) {
+                summary += `Found ${packages.length} outdated package(s).\n\n`;
+                summary += '## Recommendations\n\n';
+                summary += '1. Review the outdated packages listed below\n';
+                summary += '2. Check for breaking changes in changelogs\n';
+                summary += '3. Consider updating in batches by category (dev deps, prod deps)\n';
+                summary += '4. Run tests after updates\n\n';
+                summary += '## Next Steps\n\n';
+                summary += '- Run `yarn upgrade-interactive` to select packages to update\n';
+                summary += '- Or let Renovate/Dependabot handle updates automatically\n';
+              } else {
+                summary += '✅ All dependencies are up to date!\n';
+              }
+            } catch (error) {
+              summary += `Error reading outdated.json: ${error.message}\n`;
+              summary += '\nRun \`yarn outdated\` locally for details.\n';
+            }
+            
+            console.log(summary);
+            
+            await core.summary
+              .addRaw(summary)
+              .write();
+
+      - name: Create or update tracking issue
+        if: steps.outdated.outputs.has_outdated == 'true'
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const title = '📦 Monthly Dependency Update Check';
+            const label = 'dependencies';
+            
+            // Search for existing issue
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner,
+              repo,
+              state: 'open',
+              labels: label,
+              creator: 'github-actions[bot]',
+            });
+            
+            const existingIssue = issues.find(issue => issue.title === title);
+            
+            const date = new Date().toISOString().split('T')[0];
+            const body = `## Dependency Update Check - ${date}
+            
+            This is an automated monthly reminder to review and update dependencies.
+            
+            ### Actions to Take
+            
+            1. **Review outdated packages**
+               \`\`\`bash
+               yarn outdated
+               \`\`\`
+            
+            2. **Update interactively**
+               \`\`\`bash
+               yarn upgrade-interactive
+               \`\`\`
+            
+            3. **Or rely on automated updates**
+               - Renovate Bot handles most updates automatically
+               - Dependabot is also configured for security updates
+            
+            ### Before Updating
+            
+            - [ ] Review changelogs for breaking changes
+            - [ ] Update in batches (e.g., dev dependencies first)
+            - [ ] Run full test suite after updates
+            - [ ] Check for peer dependency conflicts
+            
+            ### Workflow Run
+            
+            See the [workflow run](https://github.com/${owner}/${repo}/actions/runs/${context.runId}) for details.
+            
+            ---
+            
+            This issue is automatically created monthly. Close it when dependencies are reviewed.`;
+            
+            if (existingIssue) {
+              // Update existing issue
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: existingIssue.number,
+                body: `🔄 Updated: ${date}\n\nNew dependency check run available. See [workflow run](https://github.com/${owner}/${repo}/actions/runs/${context.runId}).`,
+              });
+              console.log(`Updated existing issue #${existingIssue.number}`);
+            } else {
+              // Create new issue
+              const { data: newIssue } = await github.rest.issues.create({
+                owner,
+                repo,
+                title,
+                body,
+                labels: [label, 'maintenance'],
+              });
+              console.log(`Created new issue #${newIssue.number}`);
+            }
