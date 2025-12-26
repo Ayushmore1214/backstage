@@ -14,10 +14,6 @@ on:
       - 'plugins/scaffolder-react/src/**'
       - 'plugins/search/src/**'
       - 'plugins/search-react/src/**'
-
-permissions:
-  contents: read
-
 jobs:
   lhci:
     name: Accessibility
