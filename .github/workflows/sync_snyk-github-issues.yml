@@ -4,6 +4,10 @@ on:
   schedule:
     - cron: '0 */4 * * *'
 
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   sync:
     if: github.repository == 'backstage/backstage' # prevent running on forks
