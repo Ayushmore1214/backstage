@@ -152,6 +152,42 @@ site
 
 # Sensitive credentials
 *-credentials.yaml
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# Environment and secrets
+.env.*
+!.env.example
+!.env.sample
+.secrets
+secrets.yaml
+secrets.json
+.vault-password
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Private keys and certificates
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+*.crt
+*.cer
+*.der
+
+# Cloud provider credentials
+.aws/
+.azure/
+.gcloud/
+gcloud-credentials.json
+service-account*.json
 
 # Possible leftover from build:api-reports
 tsconfig.tmp.json

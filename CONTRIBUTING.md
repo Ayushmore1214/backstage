@@ -36,6 +36,17 @@ This project adheres to the [CNCF Code of Conduct][code-of-conduct]. By particip
 
 See [SECURITY](SECURITY.md).
 
+### Security-Conscious Development
+
+When contributing to Backstage, please keep security in mind:
+
+- **Never commit secrets**: Use environment variables for sensitive data
+- **Validate inputs**: Always validate and sanitize user inputs
+- **Follow secure coding practices**: Review the [SECURITY.md](SECURITY.md) file for coding guidelines
+- **Dependencies**: Be cautious when adding new dependencies; they will be reviewed
+- **Authentication & Authorization**: Ensure proper access controls are implemented
+- **Report vulnerabilities privately**: Use the security disclosure process, not public issues
+
 ## Accessibility
 
 We encourage you to catch any accessibility issues already in the development phase of new features to Backstage, see our [Accessibility documentation](https://backstage.io/docs/accessibility/) for more details.
@@ -43,6 +54,48 @@ We encourage you to catch any accessibility issues already in the development ph
 ## Get Started!
 
 So... feel ready to jump in? Let's do this. 👏🏻💯
+
+### Step-by-Step Contribution Workflow
+
+Here's the complete workflow for contributing to Backstage:
+
+1. **Find or Create an Issue**
+   - Check [existing issues](https://github.com/backstage/backstage/issues) to avoid duplicates
+   - Comment on the issue to let others know you're working on it
+   - For major changes, discuss in an issue first
+
+2. **Fork and Clone**
+   - Fork the repository to your GitHub account
+   - Clone your fork locally
+   - Add the upstream remote
+
+3. **Create a Branch**
+   - Create a descriptive branch name (e.g., `fix/plugin-crash`, `feature/new-api`)
+   - Keep branches focused on a single change
+
+4. **Make Your Changes**
+   - Follow the coding guidelines
+   - Write tests for new functionality
+   - Update documentation as needed
+
+5. **Test Your Changes**
+   - Run tests: `yarn test --no-watch <path>`
+   - Run linters: `yarn lint --fix`
+   - Type check: `yarn tsc`
+
+6. **Create a Changeset** (if needed)
+   - For changes affecting published packages, run: `yarn changeset`
+   - Follow the prompts to describe your changes
+
+7. **Commit and Push**
+   - Write clear, descriptive commit messages
+   - Sign your commits (DCO requirement)
+   - Push to your fork
+
+8. **Open a Pull Request**
+   - Provide a clear title and description
+   - Reference related issues
+   - Wait for review and address feedback
 
 ### Cloning the Repository
 
