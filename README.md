@@ -125,6 +125,8 @@ The documentation of Backstage includes:
 
 - 📖 [Quick Start Guide](docs/QUICKSTART.md) - Get started in minutes
 - 👶 [First Time Contributors Guide](docs/FIRST_TIME_CONTRIBUTORS.md) - Your first contribution
+- 🔍 [Code Review Guide](docs/CODE_REVIEW_GUIDE.md) - Effective code reviews
+- 🔒 [API Security Best Practices](docs/API_SECURITY.md) - Secure API development
 - ⚡ [Performance Best Practices](docs/PERFORMANCE.md) - Optimize your deployment
 - ✅ [Deployment Checklist](docs/DEPLOYMENT_CHECKLIST.md) - Production deployment guide
 
@@ -169,3 +171,17 @@ Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/L
 Please report sensitive security issues using Spotify's [bug-bounty program](https://hackerone.com/spotify) rather than GitHub.
 
 For further details, see our complete [security release process](SECURITY.md).
+
+### Security Features
+
+Backstage includes enterprise-grade security features:
+
+- 🔐 **Multi-provider Authentication**: OAuth, SAML, LDAP, and more
+- 🛡️ **Role-Based Access Control (RBAC)**: Fine-grained permissions
+- 🔍 **Security Scanning**: Automated vulnerability detection with CodeQL, Snyk, and Trivy
+- 📝 **Audit Logging**: Comprehensive activity tracking
+- 🔒 **Secrets Management**: Secure credential storage
+- ⚡ **Rate Limiting**: Protection against abuse
+- 🏆 **OpenSSF Best Practices**: Following industry standards
+
+Learn more in our [Security Documentation](SECURITY.md) and [API Security Guide](docs/API_SECURITY.md).
