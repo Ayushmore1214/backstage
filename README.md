@@ -121,6 +121,13 @@ The documentation of Backstage includes:
 - [Designing for Backstage](https://backstage.io/docs/dls/design)
 - [Storybook - UI components](https://backstage.io/storybook)
 
+### Additional Guides
+
+- 📖 [Quick Start Guide](docs/QUICKSTART.md) - Get started in minutes
+- 👶 [First Time Contributors Guide](docs/FIRST_TIME_CONTRIBUTORS.md) - Your first contribution
+- ⚡ [Performance Best Practices](docs/PERFORMANCE.md) - Optimize your deployment
+- ✅ [Deployment Checklist](docs/DEPLOYMENT_CHECKLIST.md) - Production deployment guide
+
 ## Community
 
 To engage with our community, you can use the following resources:
@@ -135,6 +142,17 @@ To engage with our community, you can use the following resources:
 - [Newsletter](https://spoti.fi/backstagenewsletter) - Subscribe to our email newsletter
 - [Backstage Community Sessions](https://github.com/backstage/community) - Join monthly meetups and explore Backstage community
 - Give us a star ⭐️ - If you are using Backstage or think it is an interesting project, we would love a star ❤️
+
+## Contributors
+
+Backstage is made possible by our amazing contributors! 🎉
+
+[![Contributors](https://contrib.rocks/image?repo=backstage/backstage)](https://github.com/backstage/backstage/graphs/contributors)
+
+Want to contribute? Check out our:
+- [Contributing Guide](CONTRIBUTING.md)
+- [First Time Contributors Guide](docs/FIRST_TIME_CONTRIBUTORS.md)
+- [Good First Issues](https://github.com/backstage/backstage/labels/good%20first%20issue)
 
 ## Governance
 
