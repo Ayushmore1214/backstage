@@ -15,6 +15,9 @@ English \| [한국어](README-ko_kr.md) \| [中文版](README-zh_Hans.md) \| [Fr
 [![](https://img.shields.io/github/v/release/backstage/backstage)](https://github.com/backstage/backstage/releases)
 [![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/7678/badge)](https://bestpractices.coreinfrastructure.org/projects/7678)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/backstage/backstage/badge)](https://securityscorecards.dev/viewer/?uri=github.com/backstage/backstage)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/backstage/backstage/ci.yml?branch=master&label=CI&logo=github)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-20%20%7C%2022-green?logo=node.js)](https://nodejs.org/)
 
 ## What is Backstage?
 
@@ -33,6 +36,26 @@ Out of the box, Backstage includes:
 
 Backstage was created by Spotify but is now hosted by the [Cloud Native Computing Foundation (CNCF)](https://www.cncf.io) as an Incubation level project. For more information, see the [announcement](https://backstage.io/blog/2022/03/16/backstage-turns-two#out-of-the-sandbox-and-into-incubation).
 
+## Key Features
+
+### 🗂️ Software Catalog
+Centralize and manage all your software components, services, websites, and libraries in one place with powerful search and discovery.
+
+### 🚀 Software Templates
+Standardize your development workflow with customizable templates that help teams create new projects with best practices built-in.
+
+### 📚 TechDocs
+Publish and maintain technical documentation using a "docs like code" approach, keeping documentation close to the code it describes.
+
+### 🔌 Plugin Ecosystem
+Extend Backstage with a growing ecosystem of [150+ plugins](https://backstage.io/plugins) that integrate with your existing tools and services.
+
+### 🔐 Built-in Security
+Enterprise-grade security features including authentication, authorization, and comprehensive audit logging.
+
+### 📊 Developer Analytics
+Track and improve developer productivity with built-in metrics and insights about your software ecosystem.
+
 ## Project roadmap
 
 For information about the detailed project roadmap including delivered milestones, see [the Roadmap](https://backstage.io/docs/overview/roadmap).
@@ -40,6 +63,53 @@ For information about the detailed project roadmap including delivered milestone
 ## Getting Started
 
 To start using Backstage, see the [Getting Started documentation](https://backstage.io/docs/getting-started).
+
+📚 **New to Backstage?** Check out our [Quick Start Guide](docs/QUICKSTART.md) for a step-by-step walkthrough!
+
+### Quick Start
+
+```bash
+# Install dependencies
+npx @backstage/create-app@latest
+
+# Navigate to your app directory
+cd my-backstage-app
+
+# Start the app
+yarn dev
+```
+
+The app will be available at `http://localhost:3000` 🚀
+
+### Prerequisites
+
+- **Node.js**: Version 20 or 22 (LTS recommended)
+- **Yarn**: Version 4.8.1 or higher
+- **Git**: For version control
+- **Docker** (optional): For running backend services
+
+## Troubleshooting
+
+### Common Issues
+
+**Problem**: `yarn install` fails with peer dependency errors
+**Solution**: Make sure you're using Node.js version 20 or 22 and Yarn version 4.8.1+
+
+**Problem**: Port 3000 is already in use
+**Solution**: Either stop the process using port 3000, or set a custom port:
+```bash
+PORT=3001 yarn dev
+```
+
+**Problem**: Build fails with TypeScript errors
+**Solution**: Clear the build cache and rebuild:
+```bash
+yarn clean
+yarn tsc
+yarn build
+```
+
+For more help, visit our [Discord community](https://discord.gg/backstage-687207715902193673) or check the [FAQ](https://backstage.io/docs/faq).
 
 ## Documentation
 

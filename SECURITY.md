@@ -10,6 +10,35 @@ Please report sensitive security issues via Spotify's [bug-bounty program](https
 
 If you have questions about a potential vulnerability, please reach out on Discord by asking for a maintainer in the `#support` channel, or via direct message to a maintainer.
 
+### What to Include in Your Report
+
+When reporting a security vulnerability, please include:
+
+1. **Description**: A clear description of the vulnerability
+2. **Impact**: The potential impact and severity of the issue
+3. **Reproduction Steps**: Detailed steps to reproduce the vulnerability
+4. **Affected Versions**: Which versions of Backstage are affected
+5. **Proof of Concept**: If applicable, include a PoC (without causing harm)
+6. **Suggested Fix**: If you have ideas for remediation
+
+### Response Timeline
+
+- **Initial Response**: Within 3 business days
+- **Status Update**: Within 7 business days
+- **Resolution**: Varies based on severity and complexity
+
+### Security Best Practices for Users
+
+When deploying Backstage, follow these security best practices:
+
+1. **Keep Dependencies Updated**: Regularly update to the latest stable version
+2. **Use HTTPS**: Always use HTTPS in production environments
+3. **Secure Configuration**: Never commit secrets or credentials to version control
+4. **Access Controls**: Implement proper authentication and authorization
+5. **Network Security**: Use firewalls and network segmentation
+6. **Regular Audits**: Perform regular security audits and vulnerability scans
+7. **Monitor Logs**: Set up logging and monitoring for security events
+
 ## Remediation and Notification Process
 
 Vulnerabilities are handled and published through [GitHub Security Advisories](https://docs.github.com/en/code-security/security-advisories/about-github-security-advisories).
