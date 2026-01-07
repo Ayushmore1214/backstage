@@ -72,7 +72,7 @@ be left out in its own yaml file because that's the default value there too),
 and name `pet-managers`.
 
 The entries in `providesApis` are also references. In this case, none of them
-needs to specify a kind since we know from the context that that's the only kind
+needs to specify a kind since we know from the context that it's the only kind
 that's supported here. The second entry specifies a namespace but the other ones
 don't, and in this context, the default is to refer to the same namespace as the
 originating entity (`external-systems` here). So the three references

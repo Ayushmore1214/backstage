@@ -3,6 +3,10 @@ on:
   push:
     branches: [master]
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   sync-docs-ui:
     runs-on: ubuntu-latest

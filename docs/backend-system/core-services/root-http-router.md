@@ -146,7 +146,7 @@ backend.add(
 
       app.use(healthRouter);
 
-      // you can add you your own middleware in here
+      // you can add your own middleware in here
       app.use(customMiddleware.logging());
 
       // here the routes that are registered by other plugins
