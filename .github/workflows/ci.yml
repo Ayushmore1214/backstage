@@ -6,6 +6,9 @@ on:
       - 'microsite/**'
       - 'beps/**'
 
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -15,6 +18,7 @@ jobs:
   # in the cache. The two following verify and tests jobs then always install from cache.
   install:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     strategy:
       fail-fast: false
@@ -49,6 +53,7 @@ jobs:
   # diff towards master, since it takes some time to fetch that.
   verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 90
 
     needs: install
 
@@ -148,6 +153,7 @@ jobs:
   # requires a diff towards master.
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 90
 
     needs: install
 
