@@ -1,0 +1,93 @@
+name: Post-Release Contributor Shoutout
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write # Needed to update the release body
+
+jobs:
+  add-contributors:
+    name: Add Contributors to Release Notes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Calculate and Add Contributors
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const release = context.payload.release;
+
+            // 1. Find the previous release tag to compare against
+            // We fetch the last 10 releases to find the one immediately preceding this one
+            const releases = await github.rest.repos.listReleases({
+              owner,
+              repo,
+              per_page: 10
+            });
+
+            // Filter out drafts and the current release itself
+            const sortedReleases = releases.data
+              .filter(r => !r.draft && r.tag_name !== release.tag_name)
+              .sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
+            
+            if (sortedReleases.length === 0) {
+              console.log("No previous release found to compare. Skipping.");
+              return;
+            }
+
+            const previousTag = sortedReleases[0].tag_name;
+            const currentTag = release.tag_name;
+            
+            console.log(`Comparing ${previousTag} ... ${currentTag}`);
+
+            // 2. Compare commits between tags to find authors
+            // Note: This hits the API limit of 250 commits. For huge releases, 
+            // we might need a pagination loop, but this is a solid start for a POC.
+            const compare = await github.rest.repos.compareCommitsWithBasehead({
+              owner,
+              repo,
+              basehead: `${previousTag}...${currentTag}`,
+            });
+
+            // 3. Extract unique authors
+            const authors = new Set();
+            for (const commit of compare.data.commits) {
+              if (commit.author && commit.author.login) {
+                // Filter out bots
+                if (!commit.author.login.includes('[bot]')) {
+                  authors.add(commit.author.login);
+                }
+              }
+            }
+
+            if (authors.size === 0) {
+              console.log("No human contributors found in this range.");
+              return;
+            }
+
+            // 4. Format the shoutout message
+            const contributorList = Array.from(authors)
+              .sort((a, b) => a.localeCompare(b)) // Alphabetical order
+              .map(u => `@${u}`)
+              .join(', ');
+
+            const shoutoutSection = `
+            ---
+            ### ❤️ Thank You to our Contributors
+            
+            A huge thank you to all the contributors who made this release possible!
+            
+            ${contributorList}
+            `;
+
+            // 5. Update the Release Body
+            await github.rest.repos.updateRelease({
+              owner,
+              repo,
+              release_id: release.id,
+              body: release.body + shoutoutSection
+            });
+
+            console.log(`Updated release ${currentTag} with ${authors.size} contributors.`);
